@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BachesITO - Reporte ciudadano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  /* ========== TODOS TUS ESTILOS ORIGINALES (COMPLETOS) ========== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --azul-marino: #0f2a4a;
+    --azul-medio: #1a3f6f;
+    --azul-claro: #1e5299;
+    --dorado: #c8a84b;
+    --dorado-oscuro: #9c7d2e;
+    --gris-bg: #f2f4f7;
+    --gris-borde: #d0d8e4;
+    --gris-texto: #5a6a80;
+    --blanco: #ffffff;
+    --verde: #2d6a2d;
+    --verde-bg: #e8f5e8;
+    --ambar: #7a4f00;
+    --ambar-bg: #fef3cd;
+    --rojo: #7a1a1a;
+    --rojo-bg: #fde8e8;
+    --azul-info: #0c3d7a;
+    --azul-info-bg: #e3eeff;
+    --font-sans: 'IBM Plex Sans', sans-serif;
+    --font-serif: 'Source Serif 4', serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--gris-bg);
+    color: #1a2535;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .topbar-institucional {
+    background: var(--azul-marino);
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--dorado);
+  }
+  .topbar-left { display: flex; align-items: center; gap: 14px; }
+  .escudo {
+    width: 52px; height: 52px; background: var(--dorado); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-serif); font-size: 24px; font-weight: 700;
+    color: var(--azul-marino); flex-shrink: 0; border: 2px solid rgba(255,255,255,0.2);
+  }
+  .inst-nombre { color: #fff; font-size: 15px; font-weight: 600; line-height: 1.2; }
+  .inst-sub { color: #8aaecf; font-size: 12px; margin-top: 1px; }
+  .topbar-right { display: flex; align-items: center; gap: 20px; }
+  .topbar-link { color: #8aaecf; font-size: 12px; display: flex; align-items: center; gap: 5px; text-decoration: none; transition: color 0.15s; }
+  .topbar-link:hover { color: #fff; }
+  .topbar-link i { font-size: 14px; }
+
+  .franja-tricolor { height: 6px; background: linear-gradient(to right, #006847 33.3%, #fff 33.3%, #fff 66.6%, #ce1126 66.6%); }
+
+  nav {
+    background: var(--azul-medio);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .nav-item {
+    color: #aac4df;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 16px;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-item:hover { color: #fff; }
+  .nav-item.activo { color: #fff; border-bottom-color: var(--dorado); }
+  .nav-item i { font-size: 15px; }
+
+  .hero {
+    background: var(--azul-marino);
+    padding: 24px 24px 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #6a8fb0;
+    margin-bottom: 10px;
+  }
+  .breadcrumb a { color: #6a8fb0; text-decoration: none; }
+  .breadcrumb a:hover { color: #aac4df; }
+  .breadcrumb .sep { color: #3a5a7a; }
+  .breadcrumb .actual { color: #aac4df; }
+  .hero-titulo { font-family: var(--font-serif); font-size: 24px; font-weight: 600; color: #fff; margin-bottom: 6px; line-height: 1.2; }
+  .hero-desc { color: #8aaecf; font-size: 13px; max-width: 520px; }
+  .hero-right { display: flex; gap: 14px; flex-shrink: 0; }
+  .stat-hero {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 12px 20px;
+    text-align: center;
+    min-width: 90px;
+  }
+  .stat-hero-num { font-family: var(--font-serif); font-size: 28px; font-weight: 600; color: #fff; line-height: 1; }
+  .stat-hero-label { font-size: 11px; color: #8aaecf; margin-top: 3px; }
+  .stat-hero-num.dorado { color: var(--dorado); }
+
+  .barra-stats {
+    background: #122038;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid #1e3558;
+  }
+  .stat-cell {
+    padding: 14px 20px;
+    border-right: 1px solid #1e3558;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell-label { font-size: 11px; color: #6a8fb0; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-cell-num { font-family: var(--font-serif); font-size: 26px; font-weight: 600; line-height: 1; }
+  .stat-cell-note { font-size: 11px; margin-top: 2px; }
+  .num-pendiente { color: #85B7EB; }
+  .num-proceso { color: #FAC775; }
+  .num-resuelto { color: #97C459; }
+  .num-critico { color: #F09595; }
+  .note-color { color: #4a6a8a; }
+
+  .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 0;
+    align-items: start;
+  }
+  .col-izq { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+  .filtros {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filtros-label { font-size: 12px; color: var(--gris-texto); font-weight: 500; }
+  .chip {
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    color: var(--gris-texto);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font-sans);
+  }
+  .chip:hover { border-color: var(--azul-claro); color: var(--azul-claro); }
+  .chip.activo { background: var(--azul-medio); border-color: var(--azul-medio); color: #fff; }
+  .buscador {
+    margin-left: auto;
+    position: relative;
+  }
+  .buscador input {
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+    padding: 6px 12px 6px 32px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    color: #1a2535;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .buscador input:focus { border-color: var(--azul-claro); }
+  .buscador i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 15px; color: var(--gris-texto); }
+
+  .info-proyecto {
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .info-header {
+    background: var(--azul-medio);
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-weight: 500;
+  }
+  .info-header i { color: var(--dorado); }
+  .info-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .info-texto { font-size: 13px; line-height: 1.45; color: #2c3e50; }
+  .info-texto strong { color: var(--azul-marino); }
+  .info-uso {
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 6px;
+    font-size: 12px;
+  }
+  .info-uso p { margin-bottom: 6px; }
+  .info-uso i { color: var(--azul-claro); margin-right: 6px; }
+
+  .seccion-titulo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--azul-marino);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--dorado);
+    margin-bottom: 12px;
+  }
+  .seccion-titulo i { color: var(--dorado); font-size: 15px; }
+  .tabla-reportes {
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .tabla-head {
+    display: grid;
+    grid-template-columns: 70px 1fr 70px 90px 90px 100px;
+    background: var(--azul-marino);
+    padding: 9px 16px;
+    gap: 8px;
+  }
+  .tabla-th {
+    font-size: 10px;
+    color: #8aaecf;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .tabla-fila {
+    display: grid;
+    grid-template-columns: 70px 1fr 70px 90px 90px 100px;
+    padding: 10px 16px;
+    gap: 8px;
+    border-bottom: 1px solid #f0f3f7;
+    align-items: center;
+    transition: background 0.12s;
+    cursor: pointer;
+  }
+  .tabla-fila:last-child { border-bottom: none; }
+  .tabla-fila:hover { background: #f5f8fc; }
+  .tabla-fila.seleccionado { background: #eef3fb; border-left: 3px solid var(--azul-claro); }
+  .folio-id { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--azul-claro); }
+  .fila-dir { font-size: 12px; color: #1a2535; font-weight: 500; }
+  .fila-col { font-size: 11px; color: var(--gris-texto); margin-top: 1px; }
+  .fila-fecha { font-size: 11px; color: var(--gris-texto); }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-critico { background: var(--rojo-bg); color: var(--rojo); }
+  .badge-proceso { background: var(--ambar-bg); color: var(--ambar); }
+  .badge-resuelto { background: var(--verde-bg); color: var(--verde); }
+  .badge-pendiente { background: var(--azul-info-bg); color: var(--azul-info); }
+  .badge-alta { background: var(--rojo-bg); color: var(--rojo); }
+  .badge-media { background: var(--ambar-bg); color: var(--ambar); }
+  .badge-baja { background: var(--verde-bg); color: var(--verde); }
+
+  .paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: #f8fafc;
+    border-top: 1px solid var(--gris-borde);
+    font-size: 12px;
+    color: var(--gris-texto);
+  }
+  .pag-btns { display: flex; gap: 4px; }
+  .pag-btn {
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--azul-marino);
+    font-family: var(--font-sans);
+    transition: all 0.12s;
+  }
+  .pag-btn:hover { background: var(--azul-medio); color: #fff; border-color: var(--azul-medio); }
+  .pag-btn.activo { background: var(--azul-marino); color: #fff; border-color: var(--azul-marino); }
+
+  .col-der {
+    background: #fff;
+    border-left: 1px solid var(--gris-borde);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 600px;
+  }
+  .btn-reportar {
+    background: var(--dorado);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    color: var(--azul-marino);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: background 0.15s;
+  }
+  .btn-reportar:hover { background: var(--dorado-oscuro); color: #fff; }
+  .btn-reportar i { font-size: 17px; }
+
+  .contactos-card {
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .contactos-head {
+    background: var(--azul-marino);
+    padding: 9px 14px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .contactos-head i { color: var(--dorado); }
+  .contactos-body { padding: 12px 14px; }
+  .contacto-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f3f7;
+    font-size: 12px;
+  }
+  .contacto-item:last-child { border-bottom: none; }
+  .contacto-icono { width: 24px; color: var(--azul-claro); }
+  .contacto-numero { font-family: var(--font-mono); font-weight: 500; color: #1a2535; }
+  .contacto-desc { font-size: 11px; color: var(--gris-texto); margin-left: auto; }
+
+  .info-card {
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .info-card-head {
+    background: var(--azul-marino);
+    padding: 9px 14px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .info-card-head i { color: var(--dorado); font-size: 15px; }
+  .info-card-body { padding: 12px 14px; }
+  .info-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f3f7;
+    font-size: 12px;
+  }
+  .info-fila:last-child { border-bottom: none; }
+  .info-key { color: var(--gris-texto); flex-shrink: 0; width: 100px; }
+  .info-val { color: #1a2535; font-weight: 500; text-align: right; word-break: break-word; }
+  .info-val.mono { font-family: var(--font-mono); }
+
+  .consulta-folio input {
+    background: #f8fafc;
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    width: 100%;
+    color: #1a2535;
+    outline: none;
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
+  }
+  .consulta-folio input:focus { border-color: var(--azul-claro); }
+  .btn-consultar {
+    background: var(--azul-medio);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 0;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.15s;
+  }
+  .btn-consultar:hover { background: var(--azul-claro); }
+
+  footer {
+    background: var(--azul-marino);
+    border-top: 3px solid var(--dorado);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-izq { display: flex; align-items: center; gap: 12px; }
+  .footer-logo { font-family: var(--font-serif); font-size: 13px; color: #fff; }
+  .footer-sub { font-size: 11px; color: #6a8fb0; }
+  .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+  .footer-link { font-size: 11px; color: #6a8fb0; text-decoration: none; transition: color 0.15s; }
+  .footer-link:hover { color: #aac4df; }
+  .footer-der { font-size: 11px; color: #3a5a7a; display: flex; align-items: center; gap: 5px; }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,20,35,0.65);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 12px;
+    width: 500px;
+    max-width: 95vw;
+    overflow: hidden;
+    border: 1px solid var(--gris-borde);
+  }
+  .modal-head {
+    background: var(--azul-marino);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-head-txt { color: #fff; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .modal-head-txt i { color: var(--dorado); }
+  .modal-cerrar {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    color: #aac4df;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s;
+  }
+  .modal-cerrar:hover { background: rgba(255,255,255,0.2); }
+  .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-label { font-size: 12px; font-weight: 500; color: var(--azul-marino); }
+  .form-label span { color: #c0392b; }
+  .form-input, .form-select, .form-textarea {
+    background: #f8fafc;
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    color: #1a2535;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--azul-claro); background: #fff; }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-footer {
+    padding: 14px 20px;
+    background: #f8fafc;
+    border-top: 1px solid var(--gris-borde);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .btn-cancelar {
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    color: var(--gris-texto);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-cancelar:hover { border-color: #aaa; color: #333; }
+  .btn-enviar {
+    background: var(--azul-medio);
+    border: none;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+  }
+  .btn-enviar:hover { background: var(--azul-claro); }
+  .aviso-oficial {
+    background: var(--azul-info-bg);
+    border: 1px solid #b8cff0;
+    border-left: 4px solid var(--azul-claro);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--azul-info);
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+  }
+  .aviso-oficial i { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<!-- ========== TOPBAR ========== -->
+<div class="topbar-institucional">
+  <div class="topbar-left">
+    <div class="escudo" aria-label="BachesITO">B</div>
+    <div>
+      <div class="inst-nombre">BACHESITO</div>
+      <div class="inst-sub">Sistema de Reporte Ciudadano</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <a href="tel:8000000000" class="topbar-link"><i class="ti ti-phone"></i> Línea ciudadana</a>
+    <a href="#" class="topbar-link"><i class="ti ti-accessible"></i> Accesibilidad</a>
+    <a href="#" class="topbar-link"><i class="ti ti-globe"></i> bachesito.mx</a>
+  </div>
+</div>
+
+<div class="franja-tricolor"></div>
+
+<!-- ========== NAV ========== -->
+<nav>
+  <a href="#" class="nav-item activo"><i class="ti ti-road"></i> Reporte de baches</a>
+  <a href="#" class="nav-item"><i class="ti ti-eye"></i> Transparencia</a>
+</nav>
+
+<!-- ========== HERO ========== -->
+<div class="hero">
+  <div>
+    <div class="breadcrumb">
+      <a href="#"><i class="ti ti-home"></i></a>
+      <span class="sep">/</span>
+      <a href="#">Servicios ciudadanos</a>
+      <span class="sep">/</span>
+      <span class="actual">Reporte de baches</span>
+    </div>
+    <h1 class="hero-titulo">Sistema de reporte y seguimiento</h1>
+    <p class="hero-desc">Plataforma ciudadana para reportar baches en calles, avenidas y carreteras. Da seguimiento con folio único.</p>
+  </div>
+  <div class="hero-right">
+    <div class="stat-hero"><div class="stat-hero-num">247</div><div class="stat-hero-label">Reportes totales</div></div>
+    <div class="stat-hero"><div class="stat-hero-num dorado">62%</div><div class="stat-hero-label">Tasa resolución</div></div>
+  </div>
+</div>
+
+<!-- ========== ESTADÍSTICAS ========== -->
+<div class="barra-stats">
+  <div class="stat-cell"><div class="stat-cell-label">Pendientes</div><div class="stat-cell-num num-pendiente">48</div><div class="stat-cell-note note-color">Sin atención</div></div>
+  <div class="stat-cell"><div class="stat-cell-label">En proceso</div><div class="stat-cell-num num-proceso">36</div><div class="stat-cell-note note-color">Brigadas asignadas</div></div>
+  <div class="stat-cell"><div class="stat-cell-label">Resueltos</div><div class="stat-cell-num num-resuelto">153</div><div class="stat-cell-note note-color">Atención completada</div></div>
+  <div class="stat-cell"><div class="stat-cell-label">Críticos</div><div class="stat-cell-num num-critico">10</div><div class="stat-cell-note note-color">Prioridad alta</div></div>
+</div>
+
+<!-- ========== MAIN LAYOUT ========== -->
+<div class="main-layout">
+  <!-- COLUMNA IZQUIERDA -->
+  <div class="col-izq">
+    <div class="filtros">
+      <span class="filtros-label">Filtrar por estatus:</span>
+      <button class="chip activo" data-estatus="todos" onclick="filtrarPorEstatus('todos')">Todos</button>
+      <button class="chip" data-estatus="Pendiente" onclick="filtrarPorEstatus('Pendiente')">Pendiente</button>
+      <button class="chip" data-estatus="En proceso" onclick="filtrarPorEstatus('En proceso')">En proceso</button>
+      <button class="chip" data-estatus="Resuelto" onclick="filtrarPorEstatus('Resuelto')">Resuelto</button>
+      <button class="chip" data-estatus="Crítico" onclick="filtrarPorEstatus('Crítico')">Crítico</button>
+      <div class="buscador"><i class="ti ti-search"></i><input type="text" placeholder="Buscar por folio, calle..." id="buscador-input" oninput="buscarLocal()"></div>
+    </div>
+
+    <div class="info-proyecto">
+      <div class="info-header"><i class="ti ti-info-circle"></i> Acerca de BACHESITO</div>
+      <div class="info-body">
+        <div class="info-texto"><strong>¿Qué es BACHESITO?</strong><br>Es un sistema ciudadano gratuito que permite reportar baches en la vía pública. Los reportes se envían directamente a las dependencias responsables.</div>
+        <div class="info-uso"><p><i class="ti ti-check"></i> <strong>¿Cómo usar?</strong></p><p>1. Completa el formulario.<br>2. Recibirás un <strong>folio único</strong>.<br>3. Consulta el estado en cualquier momento.<br>4. Las autoridades atenderán conforme a la prioridad.</p></div>
+        <div class="info-texto"><i class="ti ti-phone-call" style="color: var(--dorado);"></i> <strong>¿No puedes usar la web?</strong><br>Llama a los números de contacto en la tarjeta de la derecha.</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="seccion-titulo"><i class="ti ti-list-details"></i> Listado de reportes</div>
+      <div class="tabla-reportes">
+        <div class="tabla-head">
+          <div class="tabla-th">Folio</div><div class="tabla-th">Ubicación (calle, número, colonia)</div><div class="tabla-th">Prioridad</div><div class="tabla-th">Medios</div><div class="tabla-th">Fecha</div><div class="tabla-th">Estatus</div>
+        </div>
+        <div id="tabla-body">
+          <div class="text-center p-3">Cargando reportes desde la base de datos...</div>
+        </div>
+        <div class="paginacion" id="paginacion"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUMNA DERECHA -->
+  <div class="col-der">
+    <button class="btn-reportar" onclick="document.getElementById('modal').classList.add('visible')"><i class="ti ti-plus"></i> Nuevo reporte</button>
+
+    <div class="contactos-card">
+      <div class="contactos-head"><i class="ti ti-phone-call"></i> Reporta a las autoridades</div>
+      <div class="contactos-body">
+        <div class="contacto-item"><i class="ti ti-road contacto-icono"></i><div><span class="contacto-numero">55 5723 9300</span><div class="contacto-desc">SICT</div></div></div>
+        <div class="contacto-item"><i class="ti ti-toll contacto-icono"></i><div><span class="contacto-numero">074</span><div class="contacto-desc">CAPUFE</div></div></div>
+        <div class="contacto-item"><i class="ti ti-brand-x contacto-icono"></i><div><span class="contacto-numero">@CAPUFE</span><div class="contacto-desc">X</div></div></div>
+        <div class="contacto-item"><i class="ti ti-building contacto-icono"></i><div><span class="contacto-numero">(951) 501 5000</span><div class="contacto-desc">Sinfra/SIC</div></div></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-head"><i class="ti ti-file-description"></i><span>Detalle del reporte</span></div>
+      <div class="info-card-body" id="detalle-contenido">
+        <div class="info-fila"><span class="info-key">Folio</span><span class="info-val" id="det-folio">-</span></div>
+        <div class="info-fila"><span class="info-key">Estatus</span><span class="info-val" id="det-estatus">-</span></div>
+        <div class="info-fila"><span class="info-key">Ubicación</span><span class="info-val" id="det-ubicacion">-</span></div>
+        <div class="info-fila"><span class="info-key">Prioridad</span><span class="info-val" id="det-prioridad">-</span></div>
+        <div class="info-fila"><span class="info-key">Teléfono</span><span class="info-val" id="det-telefono">-</span></div>
+        <div class="info-fila"><span class="info-key">Medios reporte</span><span class="info-val" id="det-medios">-</span></div>
+        <div class="info-fila"><span class="info-key">Comentarios</span><span class="info-val" id="det-comentarios">-</span></div>
+        <div class="info-fila"><span class="info-key">Fecha reporte</span><span class="info-val" id="det-fecha">-</span></div>
+        <div class="info-fila"><span class="info-key">Atención</span><span class="info-val" id="det-atencion">-</span></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-head"><i class="ti ti-search"></i><span>Consultar folio</span></div>
+      <div class="info-card-body consulta-folio">
+        <div class="aviso-oficial"><i class="ti ti-info-circle"></i><span>Ingrese el número de folio (ej: 1001)</span></div>
+        <input type="text" placeholder="Número de folio" class="form-input" id="input-folio-consulta">
+        <button class="btn-consultar" onclick="consultarFolio()"><i class="ti ti-search"></i> Consultar estado</button>
+      </div>
+    </div>
+    <div style="font-size:11px;color:#8a9ab0;text-align:center"><i class="ti ti-database"></i> Datos alineados a tablas oficiales</div>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="footer-izq">
+    <div class="escudo" style="width:38px;height:38px;font-size:20px">B</div>
+    <div><div class="footer-logo">BACHESITO</div><div class="footer-sub">© 2026 — Reporte ciudadano</div></div>
+  </div>
+  <div class="footer-links">
+    <a href="#" class="footer-link">Inicio</a>
+    <a href="#" class="footer-link">Consulta de folio</a>
+    <a href="#" class="footer-link">Transparencia</a>
+  </div>
+  <div class="footer-der"><i class="ti ti-shield-check"></i> Datos protegidos</div>
+</footer>
+
+<!-- ========== MODAL NUEVO REPORTE ========== -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-head-txt"><i class="ti ti-plus"></i> Nuevo reporte ciudadano</div><button class="modal-cerrar" onclick="document.getElementById('modal').classList.remove('visible')"><i class="ti ti-x"></i> Cerrar</button></div>
+    <div class="modal-body">
+      <div class="aviso-oficial"><i class="ti ti-info-circle"></i><span>Los datos se guardarán en las tablas <strong>Baches</strong> y <strong>Reporte</strong>.</span></div>
+      <div class="form-group"><label class="form-label">Calle <span>*</span></label><input type="text" class="form-input" id="input-calle" placeholder="Ej: Unidad y Progreso"></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Número <span>*</span></label><input type="text" class="form-input" id="input-numero" placeholder="Ej: 297"></div><div class="form-group"><label class="form-label">Colonia <span>*</span></label><input type="text" class="form-input" id="input-colonia" placeholder="Ej: 3 de marzo"></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Código postal <span>*</span></label><input type="text" class="form-input" id="input-cp" placeholder="68288"></div><div class="form-group"><label class="form-label">Prioridad <span>*</span></label><select class="form-select" id="input-prioridad"><option value="Alta">Alta</option><option value="Media">Media</option><option value="Baja">Baja</option></select></div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Teléfono <span>*</span></label><input type="tel" class="form-input" id="input-telefono" placeholder="9511234567"></div><div class="form-group"><label class="form-label">Medios de reporte <span>*</span></label><select class="form-select" id="input-medios"><option value="Web">Web</option><option value="WhatsApp">WhatsApp</option><option value="Teléfono">Teléfono</option></select></div></div>
+      <div class="form-group"><label class="form-label">Comentarios</label><textarea class="form-textarea" id="input-comentarios" placeholder="Describa el daño..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn-cancelar" onclick="document.getElementById('modal').classList.remove('visible')">Cancelar</button><button class="btn-enviar" onclick="agregarReporte()"><i class="ti ti-send"></i> Enviar reporte</button></div>
+  </div>
+</div>
+
+<script>
+  // ========== CONEXIÓN CON EL BACKEND (api.php) ==========
+  const API_URL = 'api.php';  // Mismo directorio
+
+  let todosLosReportes = [];
+  let estatusActual = 'todos';
+
+  window.onload = () => {
+    cargarReportes();
+  };
+
+  async function cargarReportes() {
+    try {
+      const respuesta = await fetch(`${API_URL}?action=listar`);
+      if (!respuesta.ok) throw new Error('Error HTTP ' + respuesta.status);
+      const datos = await respuesta.json();
+      todosLosReportes = datos;
+      aplicarFiltros();
+    } catch (error) {
+      console.error(error);
+      document.getElementById('tabla-body').innerHTML = '<div class="text-center p-3 text-danger">⚠️ Error al cargar datos. Verifica la conexión con la base de datos.</div>';
+    }
+  }
+
+  function renderizarTabla(reportes) {
+    const contenedor = document.getElementById('tabla-body');
+    if (!reportes.length) {
+      contenedor.innerHTML = '<div class="text-center p-3">No hay reportes registrados.</div>';
+      return;
+    }
+    let html = '';
+    reportes.forEach(r => {
+      let prioridadClass = r.prioridad === 'Alta' ? 'badge-alta' : (r.prioridad === 'Media' ? 'badge-media' : 'badge-baja');
+      let estatusClass = 'badge-pendiente';
+      if (r.estatus === 'En proceso') estatusClass = 'badge-proceso';
+      else if (r.estatus === 'Resuelto') estatusClass = 'badge-resuelto';
+      else if (r.estatus === 'Crítico') estatusClass = 'badge-critico';
+      const fecha = new Date(r.fecha).toLocaleDateString('es-MX');
+      html += `
+        <div class="tabla-fila" data-folio="${r.folio}" data-estatus="${r.estatus}"
+             data-calle="${r.calle}" data-numero="${r.numero}" data-colonia="${r.colonia}"
+             data-cp="${r.codigo_postal}" data-prioridad="${r.prioridad}"
+             data-telefono="${r.telefono}" data-medios="${r.medios_reporte}"
+             data-comentarios="${r.comentarios || ''}" data-fecha="${r.fecha}"
+             onclick="seleccionarFila(this)">
+          <div class="folio-id">#${r.folio}</div>
+          <div><div class="fila-dir">${r.calle} #${r.numero}, ${r.colonia}</div><div class="fila-col">CP ${r.codigo_postal}</div></div>
+          <div><span class="badge ${prioridadClass}">${r.prioridad}</span></div>
+          <div class="fila-fecha">${r.medios_reporte}</div>
+          <div class="fila-fecha">${fecha}</div>
+          <div><span class="badge ${estatusClass}">${r.estatus}</span></div>
+        </div>
+      `;
+    });
+    contenedor.innerHTML = html;
+  }
+
+  function aplicarFiltros() {
+    let filtrados = [...todosLosReportes];
+    if (estatusActual !== 'todos') {
+      filtrados = filtrados.filter(r => r.estatus === estatusActual);
+    }
+    const busca = document.getElementById('buscador-input').value.trim().toLowerCase();
+    if (busca) {
+      filtrados = filtrados.filter(r => r.folio.toString().includes(busca) || 
+                                        r.calle.toLowerCase().includes(busca) ||
+                                        r.colonia.toLowerCase().includes(busca));
+    }
+    renderizarTabla(filtrados);
+  }
+
+  function filtrarPorEstatus(estatus) {
+    estatusActual = estatus;
+    aplicarFiltros();
+    document.querySelectorAll('.filtros .chip').forEach(btn => {
+      if (btn.getAttribute('data-estatus') === estatus) btn.classList.add('activo');
+      else btn.classList.remove('activo');
+    });
+  }
+
+  function buscarLocal() {
+    aplicarFiltros();
+  }
+
+  function seleccionarFila(fila) {
+    document.querySelectorAll('.tabla-fila').forEach(f => f.classList.remove('seleccionado'));
+    fila.classList.add('seleccionado');
+    document.getElementById('det-folio').innerHTML = `#${fila.dataset.folio}`;
+    document.getElementById('det-estatus').innerHTML = fila.dataset.estatus;
+    document.getElementById('det-ubicacion').innerHTML = `${fila.dataset.calle} #${fila.dataset.numero}, ${fila.dataset.colonia} CP ${fila.dataset.cp}`;
+    document.getElementById('det-prioridad').innerHTML = fila.dataset.prioridad;
+    document.getElementById('det-telefono').innerHTML = fila.dataset.telefono;
+    document.getElementById('det-medios').innerHTML = fila.dataset.medios;
+    document.getElementById('det-comentarios').innerHTML = fila.dataset.comentarios || 'Sin comentarios';
+    document.getElementById('det-fecha').innerHTML = fila.dataset.fecha ? fila.dataset.fecha.replace(' ', '<br>') : '';
+    document.getElementById('det-atencion').innerHTML = 'Consulta en backend (próximamente)';
+  }
+
+  async function consultarFolio() {
+    const folio = document.getElementById('input-folio-consulta').value.trim();
+    if (!folio) { alert('Ingrese un folio'); return; }
+    try {
+      const resp = await fetch(`${API_URL}?action=consultar&folio=${folio}`);
+      const data = await resp.json();
+      if (data && data.folio) {
+        const fila = Array.from(document.querySelectorAll('.tabla-fila')).find(f => f.dataset.folio == data.folio);
+        if (fila) seleccionarFila(fila);
+        else {
+          await cargarReportes();
+          const nueva = Array.from(document.querySelectorAll('.tabla-fila')).find(f => f.dataset.folio == data.folio);
+          if (nueva) seleccionarFila(nueva);
+          else alert('Reporte encontrado pero no visible en la tabla');
+        }
+      } else {
+        alert('Folio no encontrado');
+      }
+    } catch (error) {
+      alert('Error al consultar');
+    }
+  }
+
+  async function agregarReporte() {
+    const calle = document.getElementById('input-calle').value.trim();
+    const numero = document.getElementById('input-numero').value.trim();
+    const colonia = document.getElementById('input-colonia').value.trim();
+    const cp = document.getElementById('input-cp').value.trim();
+    const prioridad = document.getElementById('input-prioridad').value;
+    const telefono = document.getElementById('input-telefono').value.trim();
+    const medios = document.getElementById('input-medios').value;
+    const comentarios = document.getElementById('input-comentarios').value.trim();
+
+    if (!calle || !numero || !colonia || !cp || !telefono) {
+      alert('Complete todos los campos obligatorios');
+      return;
+    }
+
+    const nuevo = { calle, numero, colonia, codigo_postal: cp, prioridad, telefono, medios_reporte: medios, comentarios };
+
+    try {
+      const resp = await fetch(`${API_URL}?action=nuevo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevo)
+      });
+      const resultado = await resp.json();
+      if (resultado.success) {
+        alert(`Reporte #${resultado.folio} registrado correctamente`);
+        document.getElementById('modal').classList.remove('visible');
+        limpiarFormulario();
+        cargarReportes(); // recargar la tabla
+      } else {
+        alert('Error: ' + (resultado.error || 'desconocido'));
+      }
+    } catch (error) {
+      alert('Error de conexión con el servidor');
+    }
+  }
+
+  function limpiarFormulario() {
+    document.getElementById('input-calle').value = '';
+    document.getElementById('input-numero').value = '';
+    document.getElementById('input-colonia').value = '';
+    document.getElementById('input-cp').value = '';
+    document.getElementById('input-telefono').value = '';
+    document.getElementById('input-comentarios').value = '';
+    document.getElementById('input-prioridad').value = 'Alta';
+    document.getElementById('input-medios').value = 'Web';
+  }
+
+  // Exponer funciones globalmente para los onclick
+  window.filtrarPorEstatus = filtrarPorEstatus;
+  window.buscarLocal = buscarLocal;
+  window.seleccionarFila = seleccionarFila;
+  window.consultarFolio = consultarFolio;
+  window.agregarReporte = agregarReporte;
+</script>
+</body>
+</html>
